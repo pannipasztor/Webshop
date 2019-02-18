@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Webshop</title>
+</head>
+<body> 
+<form id="elado">
+    <link rel="stylesheet" type="text/css" href="webshop.css">
+    <h2>Termék listához adása</h2>
+    <label for="id">ID</label><br />
+    <input id="id" type="text"><br />
+    <label for="nev">Termék neve</label><br />
+    <input id="nev" type="text"><br />
+    <label for="ar">Egységára</label><br />
+    <input id="ar" type="text"><br />
+    <label for=fotourl>Kép</label><br />
+    <input id="fotourl" type= "text"><br /><br />
+    </form>
+    <button id= "lista" onclick="addtable()">Listához ad</button><br />
+    <table id="products" border= "1">
+    <thead>
+        <tr>
+            <th>Termék ID</td>
+            <th>Terméknév</td>
+            <th>Termék egységára</td>
+            <th></td>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>111</td>
+            <td>narancs</td>
+            <td>299Ft/kg</td>
+            <td><img src= "images/narancs.jpg"width="200"/></td>
+            <td><input id="111" type="button" value= "BUY" onclick="addcart(this.id)"></td>
+            <td><input id="111" type="button" value= "DELETE" onclick="delprod(this)"></td>
+        </tr>
+
+        <tr>
+            <td>112</td>
+            <td>körte</td>
+            <td>499 Ft/kg</td>
+            <td><img src= "images/körte.jpg" width="200"/></td>
+            <td><input id="112" type="button" value= "BUY" onclick="addcart(this.id)"></td>
+            <td><input id="112" type="button" value= "DELETE" onclick="delprod(this)"></td>
+        </tr>
+
+        <tr>
+            <td>113</td>
+            <td>dinnye</td>
+            <td>199 Ft/kg</td>
+            <td><img src= "images/dinnye.jpg" width="200"/></td>
+            <td><input id="113" type="button" value= "BUY" onclick="addcart(this.id)"></td>
+            <td><input id="113" type="button" value= "DELETE" onclick="delprod(this)"></td>       
+        </tr>
+        <tr>
+            <td>114</td>
+            <td>szőlő</td>
+            <td>699 Ft/kg</td>
+            <td><img src= "images/szolo.jpg" width="200"/></td>
+            <td><input id="114" type="button" value= "BUY" onclick="addcart(this.id)"></td>
+            <td><input id="114" type="button" value= "DELETE" onclick="delprod(this)"></td>        
+        </tr>
+        <tr>
+            <td>115</td>
+            <td>alma</td>
+            <td>599 Ft/kg</td>
+            <td><img src= "images/apple.jpg" width="200"/></td>
+            <td><input id="115" type="button" value= "BUY" onclick="addcart(this.id)"></td> 
+            <td><input id="115" type="button" value= "DELETE" onclick="delprod(this)"></td>        
+        </tr>
+   
+    </tbody>
+    </table>
+
+
+    <h2>Kosaram</h2>
+    <img src="design/kosar2.jpg" width="100"/><br />
+    <br />
+    <table id="kosaram" border="1">
+        <thead>
+            <tr>
+                <th>Termék ID</th>
+                <th>Terméknév</th>
+                <th>Egységár</th>
+                <th>Darabszám</th>
+            </tr>
+        
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <p id="sum"></p>
+    <button id="deleteAll" onclick="deleteall()">Kosár ürítése</button>
+
+    <script type="text/javascript">
+    "use strict";
+       
+
+        var table = document.getElementById("products");
+        var products = [];
+        var kosar = [];
+        for (var i=1; i<table.rows.length; i++)
+        {
+            products.push(
+                {
+                    id: table.rows[i].cells[0].innerHTML,
+                    nev: table.rows[i].cells[1].innerHTML,
+                    ar: table.rows[i].cells[2].innerHTML,
+                    url: table.rows[i].cells[3].innerHTML
+                });
+        }
+
+        //console.log(JSON.stringify(products));
+
+        function addtable()
+        {
+            var id = document.getElementById("elado").elements[0].value;
+            var nev = document.getElementById("elado").elements[1].value;
+            var ar = document.getElementById("elado").elements[2].value;
+            var url = document.getElementById("elado").elements[3].value;
+            var table = document.getElementById("products");
+            var row = table.insertRow(-1);
+            row.insertCell(0).innerHTML = id;
+            row.insertCell(1).innerHTML = nev;
+            row.insertCell(2).innerHTML = ar;
+            row.insertCell(3).innerHTML = url;
+            row.insertCell(4).innerHTML = '<input id="' + id + '" type="button" value= "BUY" onclick="addcart(this.id)">';
+            row.insertCell(5).innerHTML = '<input id="' + id + '" type="button" value= "DELETE" onclick="delprod(this)">';
+            
+            products.push(
+                {
+                    id: id,
+                    nev: nev,
+                    ar: ar,
+                    url: url
+                });
+
+        }
+
+        function addcart(clicked_id)
+        {
+            var actual = products.findIndex(x => x.id === clicked_id);
+           // console.log(products[actual].nev);
+        
+        kosar.push(
+            {
+                id: products[actual].id,
+                nev: products[actual].nev,
+                ar: products[actual].ar,
+                darabszam:1
+            });
+
+            var table = document.getElementById("kosaram").getElementsByTagName("tbody")[0];
+            var row = table.insertRow(-1);
+            row.insertCell(0).innerHTML = products[actual].id;
+            row.insertCell(1).innerHTML = products[actual].nev;
+            row.insertCell(2).innerHTML = products[actual].ar;
+            row.insertCell(3).innerHTML = 1;
+            row.insertCell(4).innerHTML = '<input id="' + products[actual].id + '" type="button" value= "Delete" onclick="delcart(this)">';
+            
+            summery();
+
+        }
+
+        function summary() {
+            var sum = 0;
+
+            for(var i=0; i < kosar.length; i++)
+            {
+                sum += parseInt(kosar[i].ar);
+           };
+
+            document.getElementById("sum").innerHTML = 'Végösszeg: <b>' + sum + '</b> Forint';
+
+
+        }
+
+        function delprod(del)
+        {
+           // console.log(del.id);
+            var actual = products.findIndex(x => x.id === del.id);
+            products.splice(actual,1);
+
+            var row = del.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+        }
+
+        function delcart(del)
+        {
+
+            var actual = kosar.findIndex(x => x.id === del.id);
+
+            kosar.splice(actual,1);
+
+            var row = del.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            
+            summary();
+        }
+
+        function deleteall()
+        {
+            kosar =[];
+            summary();
+            document.getElementById("kosaram").getElementsByTagName("tbody")[0].innerHTML = "";
+        }
+    </script>
+</body>
+</html>
